@@ -1,0 +1,161 @@
+import heapq
+from collections import deque
+import time
+drl_report_line(0)
+begin_blend(30)
+set_velx(700),set_accx(700)
+set_velj(50),set_accj(50)
+
+h= posj(90, 0, 90, 90, 90, 0)
+a=posx(152.22, 357.13, 27.58, 0, -90, -90)
+b=posx(-157.72, 343.46, 26.57, 180, 90, 90)
+def tplog(d):
+    tp_log(str(d))
+
+def grip(n):
+    if n == True:
+        wait(0.5)
+        set_tool_digital_outputs([1,-2])
+        wait(0.5)
+    else:
+        wait(0.5)
+        set_tool_digital_outputs([-1,2])
+        wait(0.5)
+        
+def pos(pos,x,y):
+    li = [pos]
+    for i in range(1,x*y):
+        if i%x == 0:
+            li.append(trans(li[i-x],[0,40,0,0,0,0]))
+        else:
+            li.append(trans(li[i-1],[-40,0,0,0,0,0]))
+    return li
+
+
+def up(pos,n):
+    return trans(pos,[0,0,n,0,0,0])
+
+def srh(m):
+    global n
+    res = []
+    if m not in n:
+        n[m] = [i for i in range(9) if m[i]!='0']
+    for i in n[m]:
+        q=[i]
+        r={i:[i]}
+        for cur in q:
+            for j in aro[cur]:
+                if j in q or m[j]!='0':
+                    continue
+                q.append(j)
+                r[j] = r[cur] + [j]
+                cm = list(m)
+                cm[j],cm[i] = cm[i],cm[j]
+                res.append([''.join(cm),[r[j],int(m[i])]])
+    return res
+
+def hg(m,em):
+    res = 0
+    for i in range(len(m)):
+        if m[i] != '0':
+            j = em.index(m[i])
+            sx,sy = (i//x, i%x)
+            ex,ey = (j//x, j%x)
+            res += abs(sx-ex) + abs(sy-ey)
+    return res
+
+def main():
+    global sm,em,x,y,aro,n
+    sm,em = '064137502', '123456700'
+    x,y = 3,3
+    aro = ((3,1),(4,2,0),(5,1),(6,4,0),(7,5,1,3),(8,2,4),(7,3),(8,4,6),(5,7))
+    n = {}
+    ol = [(hg(sm, em), 0, sm)]
+    cl = {sm:0}
+    par = {}
+
+    while ol:
+        f, g, cur = heapq.heappop(ol)
+        if cl[cur] != g:
+            continue
+        if cur == em:
+            path = []
+            while cur != sm:
+                s,e = par[cur]
+                path.append(e)
+                cur = s
+            path.reverse()
+            return path
+        ng = g + 1
+        for cm,st in srh(cur):
+            if cm not in cl:
+                cl[cm] = ng
+                par[cm] = (cur,st)
+                heapq.heappush(ol, (hg(cm, em) + ng, ng, cm))
+
+    return None
+    
+def sub(s, e):
+    global x,y,aro
+    m = [0,'X',0,0,0,0,
+         0,0,0,'X',0,0,
+         0,0,'X',0,0,'X',
+         0,0,0,0,0,0]
+    x,y = 6,4
+    aro = ((6,1),(7,0,2),(8,1,3),(9,2,4),(10,3,5),(11,4),(0,12,7),(1,13,6,8),(2,14,7,9),
+    (3,15,8,10),(4,16,9,11),(5,17,10),(6,18,13),(7,19,12,14),(8,20,13,15),(9,21,14,16),
+    (10,22,15,17),(11,23,16),(12,19),(13,18,20),(14,19,21),(15,20,22),(16,21,23),(17,22))
+    q = deque([s])
+    vst = {s}
+    path = {s:[s]}
+    while q:
+        c = q.popleft()
+        if c == e:
+            return path[c]
+        i = 0
+        while i < len(aro[c]):
+            n = aro[c][i]
+            i += 1
+            if m[n] != 'X' and n not in vst:
+                vst.add(n)
+                path[n]=path[c]+[n]
+                q.append(n)
+    return None
+
+def A():
+    p = pos(a,3,3)
+    st = time.time()
+    bfs = main()
+    et = time.time()
+    res = et - st
+    tplog("실행 시간: {:.5f}초".format(res))
+    for b in bfs:
+        movel(up(p[b[0][0]],70))
+        movel(p[b[0][0]])
+        grip(1)
+        for s in b[0]:
+            movel(up(p[s],5))
+            if s == b[0][-1]:
+                movel(up(p[s],5),r=0)
+        movel(p[b[0][-1]])
+        grip(0)
+        movel(up(p[b[0][-1]],70))
+
+
+     
+def B(s,e):
+    p = pos(b,6,4)
+    movel(up(p[s],70))
+    movel(p[s])
+    grip(1)
+    for i in sub(0,23):
+        movel(up(p[i],5))
+    movel(p[e])
+    grip(0)
+    movel(up(p[e],70))
+    
+            
+movej(h)   
+grip(0)
+A()
+B(0,23)

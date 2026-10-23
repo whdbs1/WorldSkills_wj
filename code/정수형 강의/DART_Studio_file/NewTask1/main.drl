@@ -1,0 +1,33 @@
+# joint 속도 가속도
+
+set_velj(30), set_accj(30) # deg/s
+
+# task 속도 가속도
+
+set_velx(300), set_accx(300) # mm/s
+
+# Ctrl + Q    joint
+
+posj(90, 0, 90, 90, 90, 0)
+
+# Ctrl + W / Ctrl + E    World,Base   W == E
+
+posx(-217.26, 367.96, 346.02, 0, -90, -90)
+
+# joint
+
+movej()
+
+# task
+
+movel()
+
+set_tool_digital_outputs([1,-2]) # grip
+
+set_tool_digital_outputs([-1,2]) # ungrip
+
+
+# blend mode
+
+begin_blend(30) # start
+end_blend() # end

@@ -1,0 +1,75 @@
+#begin_blend(30)
+set_velx(300)
+set_accx(300)
+set_velj(50)
+set_accj(50)
+h= posj(90, 0, 90, 90, 90, 0)
+p1=posx(-8.85, 423.41, 36.07, 180, 90, 90)
+
+def tplog(d):
+    tp_log(str(d))
+
+def grip(n):
+    if n == True:
+        wait(0.5)
+        set_tool_digital_outputs([1,-2])
+        wait(0.5)
+    else:
+        wait(0.5)
+        set_tool_digital_outputs([-1,2])
+        wait(0.5)
+        
+def pos():
+    li = [p1]
+    for i in range(1,9):
+        if i%3 == 0:
+            li.append(trans(li[i-3],[0,40,0,0,0,0]))
+        else:
+            li.append(trans(li[i-1],[-40,0,0,0,0,0]))
+    return li
+
+
+def up(pos,n):
+    return trans(pos,[0,0,n,0,0,0])
+
+def bfs(s,e):
+    path = []
+    while s != e:
+        if s%3 != e%3:
+            if s%3 > e%3:
+                s-=1
+                path.append(s)
+            else:
+                s+=1
+                path.append(s)
+        if s//3 != e//3:
+            if s//3 > e//3:
+                s-=3
+                path.append(s)
+            else:
+                s+=3
+                path.append(s)
+    return path
+
+def main(s,e):
+    p = pos()
+    movel(up(p[s],50))
+    movel(p[s])
+    grip(1)
+    movel(up(p[s],5))
+    for i in bfs(s,e):
+        movel(up(p[i],5))
+    movel(p[e])
+    grip(0)
+    movel(up(p[e],50))
+    
+
+movej(h)
+grip(0)
+main(2,7)
+    
+
+
+        
+
+
