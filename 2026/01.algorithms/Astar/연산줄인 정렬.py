@@ -2,7 +2,6 @@ import time
 import heapq
 import random
 def srh(m):
-    global n
     res = []
     if m not in n:
         n[m] = [i for i in range(9) if m[i]!='0']
@@ -21,7 +20,6 @@ def srh(m):
     return res
 
 def hg(m,em):
-    global n
     res = 0
     if m not in n:
         n[m] = [i for i in range(9) if m[i]!='0']
@@ -32,13 +30,9 @@ def hg(m,em):
         res += abs(sx-ex) + abs(sy-ey)
     return res
 
-def main(m):
+def main():
     global sm,em,x,y,aro,n
-    sm = list(m)
-    random.shuffle(sm)
-    sm = ''.join(sm)
-    em = m
-
+    sm,em = '007654321','123456700'
     x,y = 3,3
     aro = ((3,1),(4,2,0),(5,1),(6,4,0),(7,5,1,3),(8,2,4),(7,3),(8,4,6),(5,7))
     n = {}
@@ -54,7 +48,7 @@ def main(m):
             path = []
             while cur != sm:
                 s,e = par[cur]
-                path.append(e)
+                path.append([e,cur])
                 cur = s
             path.reverse()
             return path

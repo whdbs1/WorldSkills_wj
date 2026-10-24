@@ -32,13 +32,9 @@ def hg(m,em):
         res += abs(sx-ex) + abs(sy-ey)
     return res
 
-def main(m):
+def main():
     global sm,em,x,y,aro,n
-    sm = list(m)
-    random.shuffle(sm)
-    sm = ''.join(sm)
-    em = m
-
+    sm,em = '536071420','123456700'
     x,y = 3,3
     aro = ((3,1),(4,2,0),(5,1),(6,4,0),(7,5,1,3),(8,2,4),(7,3),(8,4,6),(5,7))
     n = {}
@@ -54,7 +50,7 @@ def main(m):
             path = []
             while cur != sm:
                 s,e = par[cur]
-                path.append(e)
+                path.append([cur,e])
                 cur = s
             path.reverse()
             return path
@@ -66,11 +62,4 @@ def main(m):
                 heapq.heappush(ol, (hg(cm, em) + ng, ng, cm))
 
     return None
-while 1:
-    for i in range(1000):
-        st = time.time()
-        main('123456000')
-        et = time.time()
-        res = et - st
-        print("실행 시간: {:.5f}초".format(res))
 

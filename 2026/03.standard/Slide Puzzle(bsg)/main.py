@@ -23,12 +23,12 @@ def aro(n):
 
 def cs(m):
     res = []
-    for i in [j for j in range(si) if m[j]=='0']:
+    for i in [j for j in range(si) if m[j]!='0']:
         q = [i]
         r = {i:[i]}
         for cur in q:
             for j in aro(cur):
-                if j in q or m[j]=='0':
+                if j in q or m[j]!='0':
                     continue
                 q.append(j)
                 r[j] = r[cur] + [j]
