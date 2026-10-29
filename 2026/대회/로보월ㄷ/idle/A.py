@@ -75,7 +75,7 @@ def C(g,m,*a):
 if __name__ == '__main__':
     t = 0
     if t == 0:
-        m,leaf ='12345x6700h00000', '00000x0067h54321'
+        m,leaf ='75h1x40000036020', '60h1x00000042375'
     ts = time()
     res = C(t,m,leaf)
     te = time() - ts

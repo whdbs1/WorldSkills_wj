@@ -1,5 +1,6 @@
 import heapq
 from time import time
+
 def ecg(m,s,e,r):
     m = list(m)
     m[s],m[e] = m[e],m[s]
@@ -22,13 +23,13 @@ def aro(n):
 def cs(m):
     res = []
     for i in range(si):
-        if m[i] in ('0','x','h'):
+        if m[i] in ('0','x'):
             continue
         q = [i]
         r = {i: [i]}
         for cur in q:
             for j in aro(cur):
-                if j in r or m[j] not in ('0','h'):
+                if j in r or m[j] !='0':
                     continue
                 q.append(j)
                 r[j] = r[cur] + [j]
@@ -46,13 +47,11 @@ def H(m):
     return ct
 
 def C(g,m,*a):
-    global t,sx,sy,sz,si,ser,leaf,res
-    sy,sx,sz = 7,3,1
+    global t,sx,sy,sz,si,ser,leaf,res,e
+    sy,sx,sz = 3,7,1
     si = sy*sx
     ser = {}
-
     t=g
-    ser = {}
     res = []
     leaf, = a
     q = []
@@ -76,7 +75,7 @@ def C(g,m,*a):
 if __name__ == '__main__':
     t = 0
     if t == 0:
-        m,leaf ='xx65000x93700x1248xx', 'xx14700x25800x36900xx'
+        m,leaf ='xx12345x67890x00000xx', 'xx00000x09876x54321xx'
     ts = time()
     res = C(t,m,leaf)
     te = time() - ts
